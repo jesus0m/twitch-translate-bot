@@ -40,7 +40,7 @@ To run the bot, execute the main script from the command line:
 python translate-bot.py
 ```
 
-Replace `bot_script_name.py` with the name of your bot's script file.
+Replace `translate-bot.py` with the name of your bot's script file.
 
 ## Usage
 
@@ -58,4 +58,4 @@ Contributions to Twitch Translate Bot are welcome! Feel free to fork the reposit
 
 ---
 
-Thank you for supporting TwitchTranslateBot!
+Thank you for supporting Twitch Translate Bot!
