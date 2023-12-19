@@ -11,7 +11,7 @@ Welcome to the `Twitch Translate Bot` repository! This bot is designed to enhanc
 
 ## Configuration
 
-Before using the TwitchTranslateBot, you need to set up your configuration in the `config.py` file. Here are the steps to get started:
+Before using the Twitch Translate Bot, you need to set up your configuration in the `config.py` file. Here are the steps to get started:
 
 1. **Set up Twitch Bot Credentials**:
     - `TOKEN`: Your Twitch OAuth token. Obtain it from [Twitch Chat OAuth Password Generator](https://twitchapps.com/tmi/).
@@ -24,7 +24,7 @@ Before using the TwitchTranslateBot, you need to set up your configuration in th
 
 ## Installation
 
-To install TwitchTranslateBot, clone this repository and install the required Python packages:
+To install Twitch Translate Bot, clone this repository and install the required Python packages:
 
 ```bash
 git clone https://github.com/jesus0m/twitch-translate-bot.git
