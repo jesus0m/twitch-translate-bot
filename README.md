@@ -1,5 +1,5 @@
 
-# TwitchTranslateBot
+# Twitch Translate Bot
 
 Welcome to the `Twitch Translate Bot` repository! This bot is designed to enhance the interactivity and accessibility of Twitch streams by providing real-time translation of chat messages. It's an ideal tool for streamers and viewers looking to bridge language barriers and engage with a global audience.
 
