@@ -1,0 +1,66 @@
+name: Build and Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: translate_bot_v${{ github.event.release.tag_name }}_linux.zip
+            executable_name: translate-bot
+          - os: windows-latest
+            artifact_name: translate_bot_v${{ github.event.release.tag_name }}_windows.zip
+            executable_name: translate-bot.exe
+          - os: macos-latest
+            artifact_name: translate_bot_v${{ github.event.release.tag_name }}_mac_os_x.zip
+            executable_name: translate-bot
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build executable
+        run: pyinstaller --onefile --name ${{ matrix.executable_name }} translate-bot.py
+
+      - name: Prepare files
+        run: |
+          cp config.yml dist/
+          cd dist
+          zip -r ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.yml
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: dist/${{ matrix.artifact_name }}
+
+  upload-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file_glob: true
+          file: artifacts/*
+          tag: ${{ github.ref }}
+          overwrite: true
