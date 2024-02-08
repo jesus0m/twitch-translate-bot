@@ -49,21 +49,32 @@ class Bot(commands.Bot):
     @commands.command(name='translate')
     async def translate(self, ctx):
         translator = Translator()
-        text_to_translate = ctx.message.content[len('!translate '):].strip()
+        # Divide el mensaje en palabras y elimina el comando '!translate'
+        parts = ctx.message.content.split(' ')[1:]
+        
+        # Asume que el idioma de destino es el idioma de destino predeterminado
+        dest_language = self.config['DEST_LANGUAGE']
+        text_to_translate = ' '.join(parts)
+        
+        # Si el primer argumento es un código de idioma válido de dos letras, úsalo como idioma de destino
+        if parts and len(parts[0]) == 2 and parts[0].isalpha():
+            dest_language = parts[0].lower()
+            text_to_translate = ' '.join(parts[1:])
+        
         if not text_to_translate:
             return await ctx.send("Please provide a message to translate.")
 
-        # Translate the message
+        # Realiza la traducción con el idioma de destino proporcionado o el predeterminado
         try:
-            translation = translator.translate(text_to_translate, dest=self.config['DEST_LANGUAGE'])
+            translation = translator.translate(text_to_translate, dest=dest_language)
             if translation.src in self.config['IGNORE_LANGUAGES']:
-                return  # Ignore the translation if the source language is in the ignore list
+                return  # Ignora la traducción si el idioma de origen está en la lista de ignorados
 
             translated_text = translation.text
             src_language_code = translation.src
-            dest_language_code = self.config['DEST_LANGUAGE']
+            dest_language_code = translation.dest
 
-            await ctx.send(f"{translated_text} [by {ctx.author.name}] ({src_language_code} > {dest_language_code})")
+            await ctx.send(f"{translated_text} [translated by {ctx.author.name}] ({src_language_code} > {dest_language_code})")
         except Exception as e:
             await ctx.send("Translation error.")
             print(f"Error: {e}")
