@@ -56,12 +56,17 @@ jobs:
         with:
           path: artifacts
 
+      - name: Compress all artifacts
+        run: |
+          cd artifacts
+          zip -r translate_bot_v${{ github.event.release.tag_name }}.zip *
+
       - name: Upload artifacts to release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./artifacts/translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || (matrix.os == 'windows-latest' && 'windows' || 'mac_os_x') }}
-          asset_name: translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || (matrix.os == 'windows-latest' && 'windows' || 'mac_os_x') }}.zip
+          asset_path: ./artifacts/translate_bot_v${{ github.event.release.tag_name }}.zip
+          asset_name: translate_bot_v${{ github.event.release.tag_name }}.zip
           asset_content_type: application/zip
