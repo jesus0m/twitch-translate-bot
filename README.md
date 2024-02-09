@@ -8,6 +8,12 @@ Welcome to the `Twitch Translate Bot` repository! This bot is designed to enhanc
 - **Real-Time Translation**: Instantly translates messages in Twitch chat to a specified language using Google Translate, making the stream more accessible to a diverse audience.
 - **Customizable Language Settings**: Configure the target language for translation and specify languages to ignore in the `config.py` file.
 - **Easy to Use**: Simply type `!translate` followed by the message you want to translate in the chat, and the bot will respond with the translated text.
+  - You can also add the language code before the message so that it can be translated to the language you have indicated. 
+    - For example: 
+      ```
+      !translate es Hello world!
+      ```
+    This will translate "Hello world!" to the language configured for translation.
 
 
 ## Executable Downloads
