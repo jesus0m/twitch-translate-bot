@@ -59,29 +59,21 @@ jobs:
       - name: Compress individual artifacts
         run: |
           cd artifacts
-          for file in *; do
-            zip -r "${file%.*}.zip" "$file"
-          done
-
-      - name: Upload artifacts to release
-        run: |
-          cd artifacts
-          for file in *.zip; do
-            echo "Processing $file"
-            echo "Uploading $file to release..."
-            echo "ASSET_PATH=./artifacts/$file" >> $GITHUB_ENV
-            echo "ASSET_NAME=$file" >> $GITHUB_ENV
+          for dir in */; do
+            zip -r "${dir%/}.zip" "$dir"
+            echo "ASSET_PATH=./artifacts/${dir%/}.zip" >> $GITHUB_ENV
+            echo "ASSET_NAME=${dir%/}.zip" >> $GITHUB_ENV
+            echo ::set-output name=upload_url::${{ github.event.release.upload_url }}
           done
         shell: bash
+        id: zip_files
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.zip_files.outputs.upload_url }}
           asset_path: ${{ env.ASSET_PATH }}
           asset_name: ${{ env.ASSET_NAME }}
           asset_content_type: application/zip
-      
-      
