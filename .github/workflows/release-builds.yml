@@ -67,11 +67,20 @@ jobs:
         run: |
           cd artifacts
           for file in *.zip; do
-            curl \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Content-Type: $(file -b --mime-type $file)" \
-              --data-binary @$file \
-              "${{ github.event.release.upload_url }}?name=$(basename $file)"
+            echo "Processing $file"
+            echo "Uploading $file to release..."
+            echo ::set-env name=ASSET_PATH::./artifacts/$file
+            echo ::set-env name=ASSET_NAME::$file
           done
         shell: bash
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ env.ASSET_PATH }}
+          asset_name: ${{ env.ASSET_NAME }}
+          asset_content_type: application/zip
       
