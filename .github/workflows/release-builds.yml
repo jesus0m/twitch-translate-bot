@@ -65,21 +65,8 @@ jobs:
         shell: bash
 
       - name: Upload individual artifacts
-        run: |
-          cd artifacts
-          for file in *.zip; do
-            echo "Uploading $file to release..."
-            echo "ASSET_PATH=./artifacts/$file" >> $GITHUB_ENV
-            echo "ASSET_NAME=$file" >> $GITHUB_ENV
-          done
-        shell: bash
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./artifacts/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ env.ASSET_PATH }}
-          asset_name: ${{ env.ASSET_NAME }}
-          asset_content_type: application/zip
