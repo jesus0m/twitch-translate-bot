@@ -14,23 +14,16 @@ jobs:
           - os: ubuntu-latest
             artifact_name: translate_bot_v${{ github.event.release.tag_name }}_linux.zip
             executable_name: translate-bot
-            shell_cmd: cp
-            archive_cmd: zip -r
           - os: windows-latest
             artifact_name: translate_bot_v${{ github.event.release.tag_name }}_windows.zip
             executable_name: translate-bot.exe
-            shell_cmd: Copy-Item
-            archive_cmd: Compress-Archive -Path
-            shell: pwsh
           - os: macos-latest
             artifact_name: translate_bot_v${{ github.event.release.tag_name }}_mac_os_x.zip
             executable_name: translate-bot
-            shell_cmd: cp
-            archive_cmd: zip -r
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up Python 3
         uses: actions/setup-python@v2
         with:
@@ -42,12 +35,20 @@ jobs:
       - name: Build executable
         run: pyinstaller --onefile --name ${{ matrix.executable_name }} translate-bot.py
 
-      - name: Prepare files
+      - name: Prepare files for Linux and macOS
+        if: matrix.os != 'windows-latest'
         run: |
-          ${{ matrix.shell_cmd }} config.py dist/
+          cp config.py dist/
           cd dist
-          ${{ matrix.archive_cmd }} ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.py
-        shell: ${{ matrix.shell }}
+          zip -r ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.py
+
+      - name: Prepare files for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          Copy-Item config.py -Destination dist\
+          cd dist
+          Compress-Archive -Path ${{ matrix.executable_name }}, config.py -DestinationPath ${{ matrix.artifact_name }}
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
