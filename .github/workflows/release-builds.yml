@@ -14,12 +14,19 @@ jobs:
           - os: ubuntu-latest
             artifact_name: translate_bot_v${{ github.event.release.tag_name }}_linux.zip
             executable_name: translate-bot
+            shell_cmd: cp
+            archive_cmd: zip -r
           - os: windows-latest
             artifact_name: translate_bot_v${{ github.event.release.tag_name }}_windows.zip
             executable_name: translate-bot.exe
+            shell_cmd: Copy-Item
+            archive_cmd: Compress-Archive -Path
+            shell: pwsh
           - os: macos-latest
             artifact_name: translate_bot_v${{ github.event.release.tag_name }}_mac_os_x.zip
             executable_name: translate-bot
+            shell_cmd: cp
+            archive_cmd: zip -r
 
     steps:
       - uses: actions/checkout@v2
@@ -37,9 +44,10 @@ jobs:
 
       - name: Prepare files
         run: |
-          cp config.py dist/
+          ${{ matrix.shell_cmd }} config.py dist/
           cd dist
-          zip -r ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.py
+          ${{ matrix.archive_cmd }} ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.py
+        shell: ${{ matrix.shell }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
