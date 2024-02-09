@@ -29,7 +29,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           Copy-Item config.py -Destination dist\
-          Copy-Item translate-bot.exe -Destination dist\
           cd dist
           Compress-Archive -Path ./* -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
         shell: pwsh
