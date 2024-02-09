@@ -10,16 +10,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        include:
-          - os: ubuntu-latest
-            artifact_name: translate_bot_v${{ github.event.release.tag_name }}_linux.zip
-            executable_name: translate-bot
-          - os: windows-latest
-            artifact_name: translate_bot_v${{ github.event.release.tag_name }}_windows.zip
-            executable_name: translate-bot.exe
-          - os: macos-latest
-            artifact_name: translate_bot_v${{ github.event.release.tag_name }}_mac_os_x.zip
-            executable_name: translate-bot
 
     steps:
       - uses: actions/checkout@v2
@@ -33,28 +23,28 @@ jobs:
         run: pip install pyinstaller
 
       - name: Build executable
-        run: pyinstaller --onefile --name ${{ matrix.executable_name }} translate-bot.py
+        run: pyinstaller --onefile --name translate-bot${{ matrix.os == 'windows-latest' && '.exe' || '' }} translate-bot.py
 
       - name: Prepare files for Linux and macOS
         if: matrix.os != 'windows-latest'
         run: |
           cp config.py dist/
           cd dist
-          zip -r ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.py
+          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip translate-bot config.py
 
       - name: Prepare files for Windows
         if: matrix.os == 'windows-latest'
         run: |
           Copy-Item config.py -Destination dist\
           cd dist
-          Compress-Archive -Path ${{ matrix.executable_name }}, config.py -DestinationPath ${{ matrix.artifact_name }}
+          Compress-Archive -Path translate-bot.exe, config.py -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
         shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.artifact_name }}
-          path: dist/${{ matrix.artifact_name }}
+          name: translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || (matrix.os == 'windows-latest' && 'windows' || 'mac_os_x') }}.zip
+          path: dist/
 
   upload-release:
     needs: build
