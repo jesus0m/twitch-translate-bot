@@ -56,24 +56,18 @@ jobs:
         with:
           path: artifacts
 
-      - name: Compress individual artifacts
+      - name: Compress individual artifacts and upload
         run: |
           cd artifacts
           for dir in */; do
             zip -r "${dir%/}.zip" "$dir"
-            echo "ASSET_PATH=./artifacts/${dir%/}.zip" >> $GITHUB_ENV
-            echo "ASSET_NAME=${dir%/}.zip" >> $GITHUB_ENV
-            echo ::set-output name=upload_url::${{ github.event.release.upload_url }}
+            asset_path="./artifacts/${dir%/}.zip"
+            asset_name="${dir%/}.zip"
+            echo "Uploading $asset_name to release..."
+            curl \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Content-Type: $(file -b --mime-type $asset_path)" \
+              --data-binary @$asset_path \
+              "${{ github.event.release.upload_url }}?name=$asset_name"
           done
         shell: bash
-        id: zip_files
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.zip_files.outputs.upload_url }}
-          asset_path: ${{ env.ASSET_PATH }}
-          asset_name: ${{ env.ASSET_NAME }}
-          asset_content_type: application/zip
