@@ -10,7 +10,7 @@ def build():
     if os_name.startswith("linux"):
         print("Building for Linux...")
         pyinstaller_command.extend(["--onefile", "translate-bot.py"])
-        output_name = "translate-bot.bin"  # Opcional, puedes omitir la extensión
+        output_name = "translate-bot"
     elif os_name.startswith("darwin"):
         print("Building for macOS...")
         output_name = "translate-bot.command"

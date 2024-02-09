@@ -19,7 +19,7 @@ Before running the bot, be sure to configure the `config.py` file with appropria
 
 ### macOS
 
-Download for macOS: [translate_bot_v2.1.0_mac_os_x.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.1.0/translate_bot_v2.1.0_linux.zip)
+Download for macOS: [translate_bot_v2.1.0_mac_os_x.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.1.0/translate_bot_v2.1.0_mac_os_x.zip)
 
 To run on macOS:
 - Unzip the `.zip` file.

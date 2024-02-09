@@ -23,7 +23,7 @@ jobs:
         run: pip install pyinstaller
 
       - name: Build executable
-        run: pyinstaller --onefile --name translate-bot${{ matrix.os == 'windows-latest' && '.exe' || '' }} translate-bot.py
+        run: pyinstaller --onefile --name translate-bot${{ matrix.os == 'windows-latest' && '.exe' || (matrix.os == 'macos-latest' && '.command' || '') }} translate-bot.py
 
       - name: Prepare files
         run: |
