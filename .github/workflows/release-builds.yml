@@ -57,27 +57,11 @@ jobs:
           path: artifacts
 
       - name: Upload artifacts to release
-        uses: actions/github-script@v5
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const artifactsPath = path.resolve('artifacts');
-            const files = fs.readdirSync(artifactsPath);
-            for (const file of files) {
-              const filePath = path.resolve(artifactsPath, file);
-              const stats = fs.statSync(filePath);
-              if (stats.isFile()) {
-                await github.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: context.payload.release.id,
-                  name: path.basename(file),
-                  data: fs.readFileSync(filePath),
-                  headers: {
-                    'content-length': stats.size,
-                    'content-type': 'application/zip',
-                  },
-                });
-              }
-            }
+          upload_url: ${{ github.event.release.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./artifacts/translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || (matrix.os == 'windows-latest' && 'windows' || 'mac_os_x') }}.zip
+          asset_name: translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || (matrix.os == 'windows-latest' && 'windows' || 'mac_os_x') }}.zip
+          asset_content_type: application/zip
