@@ -28,22 +28,17 @@ jobs:
       - name: Prepare files for Linux and macOS
         if: matrix.os != 'windows-latest'
         run: |
-          mkdir temp
-          cp config.py temp/
-          cp -r dist/* temp/
-          cd temp
-          zip -r ../translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip *
-          cd ..
-          rm -rf temp
+          cp config.py dist/
+          cd dist
+          ls -la
+          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip translate-bot config.py
 
       - name: Prepare files for Windows
         if: matrix.os == 'windows-latest'
         run: |
-          mkdir temp
-          Copy-Item config.py -Destination temp\
-          Copy-Item dist\* -Destination temp\
-          Compress-Archive -Path temp\* -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip -Force
-          Remove-Item -Recurse -Force temp
+          Copy-Item config.py -Destination dist\
+          cd dist
+          Compress-Archive -Path translate-bot.exe, config.py -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
         shell: pwsh
 
       - name: Upload artifact
@@ -61,13 +56,11 @@ jobs:
         with:
           path: artifacts
 
-      - name: List downloaded artifacts
-        run: ls -R artifacts/
-
-      - name: Upload artifact to release
-        if: contains(github.ref, 'tags/')
-        uses: softprops/action-gh-release@v1
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          files: artifacts/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file_glob: true
+          file: artifacts/*
+          tag: ${{ github.event.release.tag_name }}
+          overwrite: true
