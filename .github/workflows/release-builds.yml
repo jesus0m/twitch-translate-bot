@@ -55,12 +55,11 @@ jobs:
         with:
           path: artifacts
 
-      - name: List downloaded artifacts
-        run: ls -R artifacts/
-
       - name: Upload artifacts to release
-        uses: softprops/action-gh-release@v1
+        uses: svenstaro/upload-release-action@v2
         with:
-          files: artifacts/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file_glob: true
+          file: artifacts/*
+          tag: ${{ github.event.release.tag_name }}
+          overwrite: true
