@@ -19,7 +19,7 @@ Before running the bot, be sure to configure the `config.py` file with appropria
 
 ### macOS
 
-Download for macOS: [translate_bot_v2.0.0_mac_os_x.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.0.0/translate_bot_v2.0.0_mac_os_x.zip)
+Download for macOS: [translate_bot_v2.1.0_mac_os_x.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.1.0/translate_bot_v2.1.0_linux.zip)
 
 To run on macOS:
 - Unzip the `.zip` file.
@@ -28,7 +28,7 @@ To run on macOS:
 
 ### Windows
 
-Download for Windows: [translate_bot_v2.0.0_windows.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.0.0/translate_bot_v2.0.0_windows.zip)
+Download for Windows: [translate_bot_v2.1.0_windows.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.1.0/translate_bot_v2.1.0_windows.zip)
 
 To run on Windows:
 - Extract the `.zip` file.
@@ -36,15 +36,15 @@ To run on Windows:
 
 ### Linux
 
-Download for Linux: [translate_bot_v2.0.0_linux.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.0.0/translate_bot_v2.0.0_linux.zip)
+Download for Linux: [translate_bot_v2.1.0_linux.zip](https://github.com/jesus0m/twitch-translate-bot/releases/download/2.1.0/translate_bot_v2.1.0_linux.zip)
 
 To run the Twitch Translate Bot on a Linux system, follow these steps:
 
 1. **Download the File**:
-   - Download `translate_bot_v2.0.0_linux.zip` from the provided link.
+   - Download `translate_bot_v2.1.0_linux.zip` from the provided link.
 
 2. **Extract the ZIP File**:
-   - Use a file extractor, or you can use the terminal command: `unzip translate_bot_v2.0.0_linux.zip`.
+   - Use a file extractor, or you can use the terminal command: `unzip translate_bot_v2.1.0_linux.zip`.
 
 3. **Make the Bot Executable**:
    - Open the terminal and navigate to the directory where you extracted the files.
@@ -63,14 +63,14 @@ To run the Twitch Translate Bot on a Linux system, follow these steps:
 Before using the Twitch Translate Bot, you need to set up your configuration in the `config.py` file. Here are the steps to get started:
 
 1. **Set up Twitch Bot Credentials**:
-    - `TOKEN`: Your Twitch OAuth token. Obtain it from [Twitch Chat OAuth Password Generator](https://twitchapps.com/tmi/).
-    - `BOT_NAME`: The username of your Twitch bot.
-    - `CHANNEL`: The Twitch channel where the bot will operate.
-    - `WELCOME_MESSAGE`: Customize the bot's startup message which it will send to the chat when it runs for the first time, or otherwise leave it empty if you do not want this message to be displayed.
+   - `TOKEN`: Your Twitch OAuth token. Obtain it from [Twitch Chat OAuth Password Generator](https://twitchapps.com/tmi/).
+   - `BOT_NAME`: The username of your Twitch bot.
+   - `CHANNEL`: The Twitch channel where the bot will operate.
+   - `WELCOME_MESSAGE`: Customize the bot's startup message which it will send to the chat when it runs for the first time, or otherwise leave it empty if you do not want this message to be displayed.
 
 2. **Set up Translation Settings**:
-    - `DEST_LANGUAGE`: The target language for translations (e.g., 'es' for Spanish).
-    - `IGNORE_LANGUAGES`: List of language codes that the bot should not translate.
+   - `DEST_LANGUAGE`: The target language for translations (e.g., 'es' for Spanish).
+   - `IGNORE_LANGUAGES`: List of language codes that the bot should not translate.
 
 ## Installation for Python environment
 
