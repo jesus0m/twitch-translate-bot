@@ -37,9 +37,9 @@ jobs:
 
       - name: Prepare files
         run: |
-          cp config.yml dist/
+          cp config.py dist/
           cd dist
-          zip -r ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.yml
+          zip -r ${{ matrix.artifact_name }} ${{ matrix.executable_name }} config.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
