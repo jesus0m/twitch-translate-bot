@@ -31,7 +31,7 @@ jobs:
           cp config.py dist/
           cd dist
           ls -la
-          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}
+          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }} *
 
       - name: Prepare files for Windows
         if: matrix.os == 'windows-latest'
