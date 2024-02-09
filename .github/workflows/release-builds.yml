@@ -25,20 +25,21 @@ jobs:
       - name: Build executable
         run: pyinstaller --onefile --name translate-bot${{ matrix.os == 'windows-latest' && '.exe' || '' }} translate-bot.py
 
+      - name: Prepare files for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          Copy-Item config.py -Destination dist\
+          Copy-Item translate-bot.exe -Destination dist\
+          cd dist
+          Compress-Archive -Path ./* -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
+        shell: pwsh
+
       - name: Prepare files for Linux and macOS
         if: matrix.os != 'windows-latest'
         run: |
           cp config.py dist/
           cd dist
-          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip translate-bot config.py
-
-      - name: Prepare files for Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          Copy-Item config.py -Destination dist\
-          cd dist
-          Compress-Archive -Path translate-bot.exe, config.py -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
-        shell: pwsh
+          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -58,27 +59,10 @@ jobs:
       - name: List downloaded artifacts
         run: ls -R artifacts/
 
-      - name: Upload Linux artifact to release
+      - name: Upload artifact to release
         if: contains(github.ref, 'tags/')
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/translate_bot_v${{ github.event.release.tag_name }}_linux.zip
+          files: artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload macOS artifact to release
-        if: contains(github.ref, 'tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: artifacts/translate_bot_v${{ github.event.release.tag_name }}_mac_os_x.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Windows artifact to release
-        if: contains(github.ref, 'tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: artifacts/translate_bot_v${{ github.event.release.tag_name }}_windows.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
