@@ -71,19 +71,15 @@ jobs:
             echo "Uploading $file to release..."
             echo "ASSET_PATH=./artifacts/$file" >> $GITHUB_ENV
             echo "ASSET_NAME=$file" >> $GITHUB_ENV
-            echo ::set-output name=upload_url::${{ github.event.release.upload_url }}
-            echo ::set-output name=asset_path::./artifacts/$file
-            echo ::set-output name=asset_name::$file
-            echo ::set-output name=asset_content_type::application/zip
-
-            echo "Uploading $file to release..."
-            uses: actions/upload-release-asset@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              upload_url: ${{ steps.zip_files.outputs.upload_url }}
-              asset_path: ${{ steps.zip_files.outputs.asset_path }}
-              asset_name: ${{ steps.zip_files.outputs.asset_name }}
-              asset_content_type: application/zip
           done
         shell: bash
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ env.ASSET_PATH }}
+          asset_name: ${{ env.ASSET_NAME }}
+          asset_content_type: application/zip
