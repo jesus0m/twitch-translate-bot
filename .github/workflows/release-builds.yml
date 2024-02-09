@@ -69,8 +69,8 @@ jobs:
           for file in *.zip; do
             echo "Processing $file"
             echo "Uploading $file to release..."
-            echo ::set-env name=ASSET_PATH::./artifacts/$file
-            echo ::set-env name=ASSET_NAME::$file
+            echo "ASSET_PATH=./artifacts/$file" >> $GITHUB_ENV
+            echo "ASSET_NAME=$file" >> $GITHUB_ENV
           done
         shell: bash
 
@@ -83,4 +83,5 @@ jobs:
           asset_path: ${{ env.ASSET_PATH }}
           asset_name: ${{ env.ASSET_NAME }}
           asset_content_type: application/zip
+      
       
