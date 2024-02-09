@@ -31,14 +31,14 @@ jobs:
           cp config.py dist/
           cd dist
           ls -la
-          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip translate-bot config.py
+          zip -r translate_bot_v${{ github.event.release.tag_name }}_${{ matrix.os == 'ubuntu-latest' && 'linux' || 'mac_os_x' }}.zip *
 
       - name: Prepare files for Windows
         if: matrix.os == 'windows-latest'
         run: |
           Copy-Item config.py -Destination dist\
           cd dist
-          Compress-Archive -Path translate-bot.exe, config.py -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
+          Compress-Archive -Path * -DestinationPath translate_bot_v${{ github.event.release.tag_name }}_windows.zip
         shell: pwsh
 
       - name: Upload artifact
