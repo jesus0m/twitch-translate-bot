@@ -57,10 +57,27 @@ jobs:
           path: artifacts
 
       - name: Upload artifacts to release
-        uses: actions/upload-release-asset@v2
+        uses: actions/github-script@v5
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file_glob: true
-          file: artifacts/*
-          tag: ${{ github.event.release.tag_name }}
-          overwrite: true
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const artifactsPath = path.resolve('artifacts');
+            const files = fs.readdirSync(artifactsPath);
+            for (const file of files) {
+              const filePath = path.resolve(artifactsPath, file);
+              const stats = fs.statSync(filePath);
+              if (stats.isFile()) {
+                await github.repos.uploadReleaseAsset({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: context.payload.release.id,
+                  name: path.basename(file),
+                  data: fs.readFileSync(filePath),
+                  headers: {
+                    'content-length': stats.size,
+                    'content-type': 'application/zip',
+                  },
+                });
+              }
+            }
